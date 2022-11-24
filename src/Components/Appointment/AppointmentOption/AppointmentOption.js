@@ -1,19 +1,27 @@
+import { useQuery } from '@tanstack/react-query';
 import { format } from 'date-fns';
-import { tr } from 'date-fns/locale';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
+import PrivateRoute from '../../../Router/Private/PrivateRoute';
 import AppointmentCart from '../AppointmentCart/AppointmentCart';
 import AppointmentModal from '../AppointmentModal/AppointmentModal';
 
 const AppointmentOption = ({ selectedDate, setSelectedDate }) => {
-    const [appointmentOptionArray, setAppointmentOptionArray] = useState([])
+    const date = format(selectedDate, 'PP')
     const [treatment, setTreatment] = useState(null);
 
-    useEffect(() => {
-        fetch('AppointmentOption.json')
-            .then((response) => response.json())
-            .then((data) => setAppointmentOptionArray(data));
-    }, [])
+    const { data: appointmentOptionArray = [], refetch } = useQuery({
+        queryKey: ['Doctor-Portal'],
+        queryFn: async () => {
+            const response = await fetch(`http://localhost:5500/appointment/option?date=${date}`, {
+                headers: {
+                    authorization: `Bearer ${localStorage.getItem('accessToken')}`
+                }
+            })
+            const data = await response.json();
+            return data;
+        }
 
+    })
     return (
         <section>
             <div className='text-center my-10'>
@@ -33,11 +41,12 @@ const AppointmentOption = ({ selectedDate, setSelectedDate }) => {
             </div>
             {
                 treatment &&
-                <AppointmentModal
+                <PrivateRoute><AppointmentModal
                     treatment={treatment}
                     selectedDate={selectedDate}
                     setTreatment={setTreatment}
-                />
+                    refetch={refetch}
+                /></PrivateRoute>
             }
         </section>
     );
