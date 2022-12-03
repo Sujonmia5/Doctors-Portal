@@ -15,7 +15,7 @@ const MyAppointment = () => {
                 }
             })
             const data = await res.json()
-            console.log(data);
+            // console.log(data);
             return data
         }
     })
@@ -35,6 +35,7 @@ const MyAppointment = () => {
                                     <th className='text-accent bg-gray-400 text-base font-serif border-r-2 text-center'>Treatment</th>
                                     <th className='text-accent bg-gray-400 text-base font-serif border-r-2 text-center'>Favorite Color</th>
                                     <th className='text-accent bg-gray-400 text-base font-serif border-r-2 text-center'>Time</th>
+                                    <th className='text-accent bg-gray-400 text-base font-serif border-r-2 text-center'>Payment</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -46,6 +47,17 @@ const MyAppointment = () => {
                                         <td>{booking.treatment}</td>
                                         <td>{booking.date}</td>
                                         <td>{booking.slot}</td>
+                                        <td>
+                                            {
+                                                booking.price && !booking.paid && <Link className='btn btn-primary btn-sm'
+                                                    to={`/dashboard/payments/${booking._id}`}
+                                                >Pay</Link>
+                                            }
+                                            {
+                                                booking.price && booking.paid && <p className='text-green-500 font-semibold text-xl'
+                                                >Paid</p>
+                                            }
+                                        </td>
                                     </tr>)
                                 }
                             </tbody>

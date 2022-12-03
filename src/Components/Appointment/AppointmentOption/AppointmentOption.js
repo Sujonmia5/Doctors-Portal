@@ -10,9 +10,9 @@ const AppointmentOption = ({ selectedDate, setSelectedDate }) => {
     const [treatment, setTreatment] = useState(null);
 
     const { data: appointmentOptionArray = [], refetch } = useQuery({
-        queryKey: ['Doctor-Portal'],
+        queryKey: ['Doctor-Portal',selectedDate],
         queryFn: async () => {
-            const response = await fetch(`http://localhost:5500/appointment/option?date=${date}`, {
+            const response = await fetch(`http://localhost:5500/appointment/option?date=${date}`,{
                 headers: {
                     authorization: `Bearer ${localStorage.getItem('accessToken')}`
                 }
@@ -20,8 +20,8 @@ const AppointmentOption = ({ selectedDate, setSelectedDate }) => {
             const data = await response.json();
             return data;
         }
-
     })
+
     return (
         <section>
             <div className='text-center my-10'>

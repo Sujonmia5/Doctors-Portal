@@ -5,7 +5,7 @@ import { AuthContext } from '../../../Context/AuthProvider'
 
 const AppointmentModal = ({ treatment, selectedDate, setTreatment, refetch }) => {
     const { user } = useContext(AuthContext)
-    const { name: treatmentName, slots } = treatment
+    const { name: treatmentName, slots, price } = treatment
     const date = selectedDate && format(selectedDate, 'PP')
 
     const onSubmitHandle = (e) => {
@@ -22,7 +22,8 @@ const AppointmentModal = ({ treatment, selectedDate, setTreatment, refetch }) =>
             treatment: treatmentName,
             patient: name,
             email,
-            number
+            number,
+            price,
         }
         // console.log(booking);
         fetch('http://localhost:5500/booking', {
@@ -36,8 +37,8 @@ const AppointmentModal = ({ treatment, selectedDate, setTreatment, refetch }) =>
             .then(data => {
                 if (data.acknowledged) {
                     Swal.fire('Booking confirm', '', 'success')
-                    setTreatment(null)
                     refetch()
+                    setTreatment(null)
                 }
                 else {
                     setTreatment(null)
